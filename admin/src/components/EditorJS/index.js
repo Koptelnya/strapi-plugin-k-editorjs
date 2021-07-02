@@ -3,6 +3,81 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import EditorJS from "@editorjs/editorjs";
+import Paragraph from "@editorjs/paragraph";
+import Header from "@editorjs/header";
+import Quote from "@editorjs/quote";
+import Delimiter from "@editorjs/delimiter";
+import NestedList from "@editorjs/nested-list";
+import Checklist from "@editorjs/checklist";
+import Embed from "@editorjs/embed";
+import Table from "@editorjs/table";
+import CodeTool from "@editorjs/code";
+import ImageTool from "@editorjs/image";
+
+import axios from "axios";
+
+const tools = {
+    paragraph: {
+        class: Paragraph,
+        inlineToolbar: true,
+        placeholder: "Начинайте писать..."
+    },
+    header: {
+        class: Header,
+        levels: [1, 2, 3, 4],
+        defaultLevel: 2,
+    },
+    quote: {
+        class: Quote,
+        inlineToolbar: true,
+        config: {
+            quotePlaceholder: "Цитата",
+            captionPlaceholder: "Автор цитаты",
+        },
+    },
+    delimiter: Delimiter,
+    list: {
+        class: NestedList,
+        inlineToolbar: true,
+    },
+    checklist: {
+        class: Checklist,
+        inlineToolbar: true,
+    },
+    embed: Embed,
+    table: Table,
+    code: CodeTool,
+    image: {
+        class: ImageTool,
+        config: {
+            field: "files.image",
+            additionalRequestData: {
+                data: JSON.stringify({})
+            },
+            additionalRequestHeaders: {
+                "Authorization": `Bearer ${JSON.parse(sessionStorage.getItem("jwtToken"))}`
+            },
+            endpoints: {
+                byUrl: "/editorjs/image/byUrl",
+            },
+            uploader: {
+                async uploadByFile(file) {
+                    const formData = new FormData();
+                    formData.append("data", JSON.stringify({}));
+                    formData.append("files.image", file);
+
+                    const {data} = await axios.post("/editorjs/image/byFile", formData, {
+                        headers: {
+                            "Authorization": `Bearer ${JSON.parse(sessionStorage.getItem("jwtToken"))}`
+                        }
+                    });
+
+                    return data;
+                },
+            }
+        }
+    }
+};
 
 const Wrapper = styled.div`
   > * {
@@ -62,7 +137,9 @@ const Editor = ({
                 ...(
                     onReady && {onReady}
                 ),
-                onChange: changeHandler
+                onChange: changeHandler,
+                tools,
+                defaultBlock: "paragraph"
             });
         }
 
@@ -90,7 +167,7 @@ const Editor = ({
 
         return () => {
             destroyEditor();
-        }
+        };
     }, []);
 
     useEffect(() => {
