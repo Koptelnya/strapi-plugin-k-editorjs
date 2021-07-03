@@ -13,6 +13,7 @@ import Embed from "@editorjs/embed";
 import Table from "@editorjs/table";
 import CodeTool from "@editorjs/code";
 import ImageTool from "@editorjs/image";
+import {MediaLibAdapter, MediaLibComponent} from "./MediaLib";
 
 import axios from "axios";
 
@@ -76,6 +77,9 @@ const tools = {
                 },
             }
         }
+    },
+    mediaLib: {
+        class: MediaLibAdapter
     }
 };
 
@@ -189,6 +193,7 @@ const Editor = ({
 
     return <Wrapper>
         {children || <div id={holder} />}
+        <MediaLibComponent/>
     </Wrapper>;
 };
 
