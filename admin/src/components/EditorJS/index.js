@@ -13,75 +13,11 @@ import Embed from "@editorjs/embed";
 import Table from "@editorjs/table";
 import CodeTool from "@editorjs/code";
 import ImageTool from "@editorjs/image";
-import {MediaLibAdapter, MediaLibComponent} from "./MediaLib";
 
 import axios from "axios";
-
-const tools = {
-    paragraph: {
-        class: Paragraph,
-        inlineToolbar: true,
-        placeholder: "Начинайте писать..."
-    },
-    header: {
-        class: Header,
-        levels: [1, 2, 3, 4],
-        defaultLevel: 2,
-    },
-    quote: {
-        class: Quote,
-        inlineToolbar: true,
-        config: {
-            quotePlaceholder: "Цитата",
-            captionPlaceholder: "Автор цитаты",
-        },
-    },
-    delimiter: Delimiter,
-    list: {
-        class: NestedList,
-        inlineToolbar: true,
-    },
-    checklist: {
-        class: Checklist,
-        inlineToolbar: true,
-    },
-    embed: Embed,
-    table: Table,
-    code: CodeTool,
-    image: {
-        class: ImageTool,
-        config: {
-            field: "files.image",
-            additionalRequestData: {
-                data: JSON.stringify({})
-            },
-            additionalRequestHeaders: {
-                "Authorization": `Bearer ${JSON.parse(sessionStorage.getItem("jwtToken"))}`
-            },
-            endpoints: {
-                byUrl: "/editorjs/image/byUrl",
-            },
-            uploader: {
-                async uploadByFile(file) {
-                    const formData = new FormData();
-                    formData.append("data", JSON.stringify({}));
-                    formData.append("files.image", file);
-
-                    const {data} = await axios.post("/editorjs/image/byFile", formData, {
-                        headers: {
-                            "Authorization": `Bearer ${JSON.parse(sessionStorage.getItem("jwtToken"))}`
-                        }
-                    });
-
-                    return data;
-                },
-            }
-        }
-    },
-    mediaLib: {
-        class: MediaLibAdapter
-    }
-};
+import MediaLibAdapter from "./MediaLib/Adapter";
+import MediaLibComponent from "./MediaLib/Component";
+import {changeFunc, getToggleFunc} from "./MediaLib/Utils";
 
 const Wrapper = styled.div`
   > * {
@@ -121,7 +57,96 @@ const Editor = ({
 
     const editorInstance = useRef(null);
 
-    const changeHandler = async () => {
+    const [mediaLibBlockIndex, setMediaLibBlockIndex] = useState(-1);
+
+    const [isMediaLibOpen, setIsMediaLibOpen] = useState(false);
+
+    const mediaLibToggleFunc = useCallback(getToggleFunc({
+        openStateSetter: setIsMediaLibOpen,
+        indexStateSetter: setMediaLibBlockIndex
+    }), []);
+
+    const handleMediaLibChange = useCallback((data) => {
+        console.dir(data);
+
+        changeFunc({
+            indexStateSetter: setMediaLibBlockIndex,
+            data,
+            index: mediaLibBlockIndex,
+            editor: editorInstance.current
+        });
+    }, [mediaLibBlockIndex, editorInstance]);
+
+    const tools = useRef({
+        paragraph: {
+            class: Paragraph,
+            inlineToolbar: true,
+            placeholder: "Начинайте писать..."
+        },
+        header: {
+            class: Header,
+            levels: [1, 2, 3, 4],
+            defaultLevel: 2,
+        },
+        quote: {
+            class: Quote,
+            inlineToolbar: true,
+            config: {
+                quotePlaceholder: "Цитата",
+                captionPlaceholder: "Автор цитаты",
+            },
+        },
+        delimiter: Delimiter,
+        list: {
+            class: NestedList,
+            inlineToolbar: true,
+        },
+        checklist: {
+            class: Checklist,
+            inlineToolbar: true,
+        },
+        embed: Embed,
+        table: Table,
+        code: CodeTool,
+        image: {
+            class: ImageTool,
+            config: {
+                field: "files.image",
+                additionalRequestData: {
+                    data: JSON.stringify({})
+                },
+                additionalRequestHeaders: {
+                    "Authorization": `Bearer ${JSON.parse(sessionStorage.getItem("jwtToken"))}`
+                },
+                endpoints: {
+                    byUrl: "/editorjs/image/byUrl",
+                },
+                uploader: {
+                    async uploadByFile(file) {
+                        const formData = new FormData();
+                        formData.append("data", JSON.stringify({}));
+                        formData.append("files.image", file);
+
+                        const {data} = await axios.post("/editorjs/image/byFile", formData, {
+                            headers: {
+                                "Authorization": `Bearer ${JSON.parse(sessionStorage.getItem("jwtToken"))}`
+                            }
+                        });
+
+                        return data;
+                    },
+                }
+            }
+        },
+        mediaLib: {
+            class: MediaLibAdapter,
+            config: {
+                mediaLibToggleFunc
+            }
+        }
+    });
+
+    const changeHandler = useCallback(async () => {
         if (!editorInstance || !onChange) {
             return;
         }
@@ -130,7 +155,7 @@ const Editor = ({
 
         const data = await editorInstance.current.save();
         onChange(data);
-    };
+    }, [editorInstance, onChange]);
 
     const initEditor = useCallback(async () => {
         if (!editorInstance.current) {
@@ -142,7 +167,7 @@ const Editor = ({
                     onReady && {onReady}
                 ),
                 onChange: changeHandler,
-                tools,
+                tools: tools.current,
                 defaultBlock: "paragraph"
             });
         }
@@ -192,8 +217,9 @@ const Editor = ({
     }, [destroyEditor, initEditor, editorInstance, enableReInitialize]);
 
     return <Wrapper>
-        {children || <div id={holder} />}
-        <MediaLibComponent/>
+        {children || <div id={holder} />} <MediaLibComponent toggle={mediaLibToggleFunc} isOpen={isMediaLibOpen}
+                                                             onChange={handleMediaLibChange}
+    />
     </Wrapper>;
 };
 

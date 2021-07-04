@@ -39,7 +39,7 @@ const MediaLibComponent = ({isOpen, onChange, toggle}) => {
             <Component
                 allowedTypes={['images']}
                 isOpen={isOpen}
-                multiple={false}
+                multiple={true}
                 onClosed={handleClosed}
                 onInputMediaChange={handleInputChange}
                 onToggle={toggle}

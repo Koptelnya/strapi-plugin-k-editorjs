@@ -14,8 +14,8 @@ export default class MediaLibAdapter {
     render() {
         const currentIndex = this.api.blocks.getCurrentBlockIndex();
 
-        if (this.config.openMediaLibFunc) {
-            this.config.openMediaLibFunc(currentIndex);
+        if (this.config.mediaLibToggleFunc) {
+            this.config.mediaLibToggleFunc(currentIndex);
         }
 
         return document.createElement('p');
@@ -23,7 +23,7 @@ export default class MediaLibAdapter {
 
     save() {
         return {
-            name: "imagePlace"
+            name: "media-library-block"
         }
     }
 }
