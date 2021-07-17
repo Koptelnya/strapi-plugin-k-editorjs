@@ -47,7 +47,7 @@ To do this:
 1. Open administration panel
 1. Go to Settings
 1. Go to Roles page of Users & Permissions plugin and start edit permissions for Authenticated role
-1. Find permissions for EditorJS in permissions list and choose "Select all"
+1. Find permissions for K-EditorJS in permissions list and choose "Select all"
 1. Save changes
 
 ## Contributing

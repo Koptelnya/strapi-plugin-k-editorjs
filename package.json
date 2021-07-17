@@ -1,9 +1,9 @@
 {
     "name": "strapi-plugin-k-editorjs",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Strapi - EditorJS plugin",
     "strapi": {
-        "name": "editorjs",
+        "name": "k-editorjs",
         "icon": "paragraph",
         "description": "Strapi - EditorJS plugin"
     },

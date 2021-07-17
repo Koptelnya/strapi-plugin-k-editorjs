@@ -115,7 +115,7 @@ const Editor = ({
                     "Authorization": `Bearer ${JSON.parse(sessionStorage.getItem("jwtToken"))}`
                 },
                 endpoints: {
-                    byUrl: "/editorjs/image/byUrl",
+                    byUrl: "/k-editorjs/image/byUrl",
                 },
                 uploader: {
                     async uploadByFile(file) {
@@ -123,7 +123,7 @@ const Editor = ({
                         formData.append("data", JSON.stringify({}));
                         formData.append("files.image", file);
 
-                        const {data} = await axios.post("/editorjs/image/byFile", formData, {
+                        const {data} = await axios.post("/k-editorjs/image/byFile", formData, {
                             headers: {
                                 "Authorization": `Bearer ${JSON.parse(sessionStorage.getItem("jwtToken"))}`
                             }
