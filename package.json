@@ -1,15 +1,15 @@
 {
     "name": "strapi-plugin-k-editorjs",
-    "version": "0.0.0",
-    "description": "Плагин для Strapi подключающий EditorJS в качестве WYSIWYG редактора",
+    "version": "1.0.0",
+    "description": "Strapi - EditorJS plugin",
     "strapi": {
         "name": "editorjs",
-        "icon": "plug",
-        "description": "Плагин для Strapi подключающий EditorJS в качестве WYSIWYG редактора"
+        "icon": "paragraph",
+        "description": "Strapi - EditorJS plugin"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://gitlab.com/koptelnya/packages/strapi-plugin-k-editorjs.git"
+        "url": "git+https://github.com/Koptelnya/strapi-plugin-k-editorjs.git"
     },
     "dependencies": {
         "@editorjs/checklist": "^1.3.0",
@@ -27,16 +27,22 @@
         "file-type": "^16.5.0",
         "get-file-object-from-local-path": "^1.0.2"
     },
-    "author": "Koptelnya",
+    "author": {
+        "name": "Kopltenya // Egor Hlebnikov",
+        "email": "e.hlebnikov@koptelnya.ru",
+        "url": "https://koptelnya.ru"
+    },
     "maintainers": [
         {
-            "name": "Egor Hlebnikov",
-            "email": "e.hlebnikov@koptelnya.ru"
+            "name": "Kopltenya // Egor Hlebnikov",
+            "email": "e.hlebnikov@koptelnya.ru",
+            "url": "https://koptelnya.ru"
         }
     ],
     "engines": {
         "node": ">=12.x.x",
         "npm": ">=6.0.0"
     },
+    "keywords": ["strapi", "plugin", "editorjs", "wysiwyg"],
     "license": "MIT"
 }

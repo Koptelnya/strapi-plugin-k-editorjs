@@ -81,7 +81,7 @@ const Editor = ({
         paragraph: {
             class: Paragraph,
             inlineToolbar: true,
-            placeholder: "Начинайте писать..."
+            placeholder: "Start writing..."
         },
         header: {
             class: Header,
@@ -91,10 +91,6 @@ const Editor = ({
         quote: {
             class: Quote,
             inlineToolbar: true,
-            config: {
-                quotePlaceholder: "Цитата",
-                captionPlaceholder: "Автор цитаты",
-            },
         },
         delimiter: Delimiter,
         list: {
