@@ -7,7 +7,7 @@ import Paragraph from "@editorjs/paragraph";
 import Header from "@editorjs/header";
 import Quote from "@editorjs/quote";
 import Delimiter from "@editorjs/delimiter";
-import NestedList from "@editorjs/nested-list";
+import List from "@editorjs/list";
 import Checklist from "@editorjs/checklist";
 import Embed from "@editorjs/embed";
 import Table from "@editorjs/table";
@@ -94,7 +94,7 @@ const Editor = ({
         },
         delimiter: Delimiter,
         list: {
-            class: NestedList,
+            class: List,
             inlineToolbar: true,
         },
         checklist: {

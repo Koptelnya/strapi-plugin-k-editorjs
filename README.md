@@ -31,7 +31,7 @@ Also, you've to configure API permissions for this plugin to be able to work wit
 - [Header](https://github.com/editor-js/header)
 - [Quote](https://github.com/editor-js/quote)
 - [Delimiter](https://github.com/editor-js/delimiter)
-- [List](https://github.com/editor-js/nested-list)
+- [List](https://github.com/editor-js/list)
 - [Checklist](https://github.com/editor-js/checklist)
 - [Embed](https://github.com/editor-js/embed)
 - [Table](https://github.com/editor-js/table)
