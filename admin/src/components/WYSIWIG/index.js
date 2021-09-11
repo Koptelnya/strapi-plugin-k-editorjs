@@ -24,7 +24,7 @@ const WysiwygWithErrors = ({
                                name,
                                noErrorsDescription,
                                onChange,
-                               value,
+                               value = "",
                            }) => {
     const [editorInstance, setEditorInstance] = useState(null);
     const [haveValue, setHaveValue] = useState(false);
@@ -36,20 +36,30 @@ const WysiwygWithErrors = ({
     }, [editorInstance]);
 
     useEffect(() => {
+        let isMounted = true;
+
         if (!editorInstance || !value || haveValue) {
             return;
         }
 
-        if (value) {
+        if (value && isMounted) {
             setHaveValue(true);
         }
 
         const renderValue = async () => {
+            if (!isMounted) {
+                return;
+            }
+
             await editorInstance.isReady;
             editorInstance.render(JSON.parse(value));
         };
 
         renderValue();
+
+        return () => {
+            isMounted = false;
+        }
     }, [value, editorInstance]);
 
     return (
@@ -94,7 +104,7 @@ WysiwygWithErrors.propTypes = {
     name: PropTypes.string.isRequired,
     noErrorsDescription: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string,
 };
 
 export default WysiwygWithErrors;
