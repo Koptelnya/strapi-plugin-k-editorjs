@@ -1,20 +1,20 @@
-import React, {useState, useRef, useEffect, useCallback} from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
+import Checklist from "@editorjs/checklist";
+import CodeTool from "@editorjs/code";
+import Delimiter from "@editorjs/delimiter";
 
 import EditorJS from "@editorjs/editorjs";
-import Paragraph from "@editorjs/paragraph";
-import Header from "@editorjs/header";
-import Quote from "@editorjs/quote";
-import Delimiter from "@editorjs/delimiter";
-import List from "@editorjs/list";
-import Checklist from "@editorjs/checklist";
 import Embed from "@editorjs/embed";
-import Table from "@editorjs/table";
-import CodeTool from "@editorjs/code";
+import Header from "@editorjs/header";
 import ImageTool from "@editorjs/image";
-
-import axios from "axios";
+import List from "@editorjs/list";
+import Paragraph from "@editorjs/paragraph";
+import Quote from "@editorjs/quote";
+import Table from "@editorjs/table";
+import PropTypes from "prop-types";
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import {auth, prefixFileUrlWithBackendUrl, request} from "strapi-helper-plugin";
+import styled from "styled-components";
+import pluginId from "../../pluginId";
 import MediaLibAdapter from "./MediaLib/Adapter";
 import MediaLibComponent from "./MediaLib/Component";
 import {changeFunc, getToggleFunc} from "./MediaLib/Utils";
@@ -112,10 +112,10 @@ const Editor = ({
                     data: JSON.stringify({})
                 },
                 additionalRequestHeaders: {
-                    "Authorization": `Bearer ${JSON.parse(sessionStorage.getItem("jwtToken"))}`
+                    "Authorization": `Bearer ${auth.getToken()}`
                 },
                 endpoints: {
-                    byUrl: "/k-editorjs/image/byUrl",
+                    byUrl: prefixFileUrlWithBackendUrl(`/${pluginId}/image/byUrl`),
                 },
                 uploader: {
                     async uploadByFile(file) {
@@ -123,13 +123,16 @@ const Editor = ({
                         formData.append("data", JSON.stringify({}));
                         formData.append("files.image", file);
 
-                        const {data} = await axios.post("/k-editorjs/image/byFile", formData, {
-                            headers: {
-                                "Authorization": `Bearer ${JSON.parse(sessionStorage.getItem("jwtToken"))}`
-                            }
-                        });
-
-                        return data;
+                        return await request(
+                            `/${pluginId}/image/byFile`,
+                            {
+                                method: 'POST',
+                                headers: {},
+                                body: formData,
+                            },
+                            false,
+                            false
+                        );
                     },
                 }
             }
@@ -226,7 +229,7 @@ Editor.defaultProps = {
 };
 
 Editor.propTypes = {
-    enableReInitialize: PropTypes.boolean,
+    enableReInitialize: PropTypes.bool,
     instanceRef: PropTypes.func,
     holder: PropTypes.string,
     onChange: PropTypes.func,

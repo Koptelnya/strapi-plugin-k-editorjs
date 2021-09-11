@@ -18,7 +18,7 @@ Installation Requirements</a>.
 
 **Supported Strapi versions**:
 
-- Strapi v3.6.5 (recently tested)
+- Strapi v3.6.8 (recently tested)
 - Strapi v3.x
 
 (This plugin may work with the older Strapi versions, but these are not tested nor officially supported at this time.)
